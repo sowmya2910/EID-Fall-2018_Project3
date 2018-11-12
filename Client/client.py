@@ -17,6 +17,26 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 global count
 
+class Login(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(Login, self).__init__(parent)
+        self.textName = QtWidgets.QLineEdit(self)
+        self.textPass = QtWidgets.QLineEdit(self)
+        self.buttonLogin = QtWidgets.QPushButton('Login', self)
+        self.buttonLogin.clicked.connect(self.handleLogin)
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.addWidget(self.textName)
+        layout.addWidget(self.textPass)
+        layout.addWidget(self.buttonLogin)
+
+    def handleLogin(self):
+        if (self.textName.text() == 'pi' and
+            self.textPass.text() == 'maya'):
+            self.accept()
+        else:
+            QtWidgets.QMessageBox.warning(
+                self, 'Error', 'Wrong username or password. Try Again!')
+
 class Ui_DHT22SensorData(object):
     def __init__(self):
         self.sqs = boto3.resource('sqs')
@@ -198,9 +218,11 @@ class Ui_DHT22SensorData(object):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    DHT22SensorData = QtWidgets.QMainWindow()
-    ui = Ui_DHT22SensorData()
-    ui.setupUi(DHT22SensorData)
-    DHT22SensorData.show()
-    sys.exit(app.exec_())
+    login = Login()
+    if login.exec_() == QtWidgets.QDialog.Accepted:
+	DHT22SensorData = QtWidgets.QMainWindow()
+	ui = Ui_DHT22SensorData()
+	ui.setupUi(DHT22SensorData)
+	DHT22SensorData.show()
+	sys.exit(app.exec_())
 
