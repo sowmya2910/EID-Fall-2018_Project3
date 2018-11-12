@@ -227,6 +227,8 @@ class Ui_DHT22SensorData(object):
         self.timer = QTimer()
         self.timer.timeout.connect(self.getDataCelcius)
         self.timer.start(5000)
+        self.TempPlotPushButton.clicked.connect(self.plotGraph)
+        self.HumidityPlotPushButton.clicked.connect(self.plotGraph)
         QtCore.QMetaObject.connectSlotsByName(DHT22SensorData)
 
     def retranslateUi(self, DHT22SensorData):
