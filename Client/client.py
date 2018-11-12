@@ -6,6 +6,12 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+# Function to display QT GUI and run a weather-monitoring application on the Client-side, to request and receive data from AWS SQS, display and plot Temperature and Humidity Plots (Last 10 values)
+#
+# Authors: Sowmya Ramakrishnan and Vinayak Srivatsan Kovalam Mohan
+#
+
+#Import libraries
 import matplotlib.pyplot as plt
 import sys
 import time
@@ -15,8 +21,10 @@ import boto3
 import ast
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+#Define count as global variable
 global count
 
+#A class for Login
 class Login(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(Login, self).__init__(parent)
@@ -29,6 +37,7 @@ class Login(QtWidgets.QDialog):
         layout.addWidget(self.textPass)
         layout.addWidget(self.buttonLogin)
 
+    #Login function with parameter checking
     def handleLogin(self):
         if (self.textName.text() == 'pi' and
             self.textPass.text() == 'maya'):
@@ -37,8 +46,12 @@ class Login(QtWidgets.QDialog):
             QtWidgets.QMessageBox.warning(
                 self, 'Error', 'Wrong username or password. Try Again!')
 
+#Main class
 class Ui_DHT22SensorData(object):
+
+    #Initialization variables
     def __init__(self):
+	#Invoking boto3 resource and specifying SQS Queue name for access/to enable data pulling
         self.sqs = boto3.resource('sqs')
         self.queue = self.sqs.get_queue_by_name(QueueName='EIDProject3_Queue')
         self.count = 0
@@ -53,6 +66,8 @@ class Ui_DHT22SensorData(object):
         self.multiplier = 1
         self.adder = 0
         self.unit = " C\n"
+
+    #UI Parameters
     def setupUi(self, DHT22SensorData):
         DHT22SensorData.setObjectName("DHT22SensorData")
         DHT22SensorData.resize(547, 400)
@@ -116,6 +131,7 @@ class Ui_DHT22SensorData(object):
         self.CloseButton.setObjectName("CloseButton")
         DHT22SensorData.setCentralWidget(self.centralwidget)
         
+	#Functions
         self.retranslateUi(DHT22SensorData)
         self.getTime()
         self.CloseButton.clicked.connect(DHT22SensorData.close)
@@ -137,23 +153,28 @@ class Ui_DHT22SensorData(object):
         self.label_2.setText(_translate("DHT22SensorData", "Message"))
         self.ClearDataButton.setText(_translate("DHT22SensorData", "Clear Data"))
         self.CloseButton.setText(_translate("DHT22SensorData", "Close"))
-		
+	
+    #Function to get and display Date and Time
     def getTime(self):
         currenttime = datetime.datetime.now()
         now = currenttime.strftime("%m/%d/%Y %H:%M")
         self.Timelabel.setText(now)
         return now
+
     global count 
+	
+    #Function to get data from SQS Queue
     def get_data(self):
         #global count
         count = 0
         self.SensorState.setText("Connected")
         queuelist = []
         for i in range(3):
-            offload_list = self.queue.receive_messages(MaxNumberOfMessages=10)
-            if not offload_list:
+	    #Receive 10 messages max
+            valueslist = self.queue.receive_messages(MaxNumberOfMessages=10)
+            if not valueslist:
                 break
-            for msg in offload_list:
+            for msg in valueslist:
                 msgbody = ast.literal_eval(msg.body)
                 queuelist.append(msgbody)
                 msg.delete()
@@ -183,8 +204,11 @@ class Ui_DHT22SensorData(object):
                             self.MessageLabel.setText("Fetched Data:\n"  + final_mesg + "\nTimestamp: " + str(datetime.datetime.now()))
                             self.plotGraph()
                         else:
+				#In case of error/no values
                                 self.MessageLabel.setText("Error Fetching Data \n")
-    def plotGraph(self):
+  #Function to plot graphs				
+  def plotGraph(self):
+	#Temperature Graph
         plt.plot(range(self.count), self.maximumtemperature, 'b-', label='Maximum Temperature')
         plt.plot(range(self.count), self.minimumtemperature, 'r-', label='Minimum Temperature')
         plt.plot(range(self.count), self.currenttemperature, 'y-', label='Current Temperature')
@@ -194,6 +218,7 @@ class Ui_DHT22SensorData(object):
         plt.ylabel('Temperature in C')
         plt.xlabel('count')
         plt.show()
+	#Humidity Graph
         plt.plot(range(self.count), self.maximumhumidity, 'b-', label='Maximum Humidity')
         plt.plot(range(self.count), self.minimumhumidity, 'r-', label='Minimum Humidity')
         plt.plot(range(self.count), self.currenthumidity, 'y-', label='Current Humidity')
@@ -204,17 +229,19 @@ class Ui_DHT22SensorData(object):
         plt.xlabel('count')
         plt.show()		
 
-		
+    #Setting parameters for C to F conversion		
     def CtoF(self):
         self.multiplier = 1.8
         self.adder = 32.0
         self.unit = " F\n"
 	
+    #Setting parameters for F to C conversion
     def FtoC(self):
         self.multiplier = 1.0
         self.adder = 0.0
         self.unit = " C\n"
 
+#main 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
