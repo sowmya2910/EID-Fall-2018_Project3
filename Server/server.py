@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-# Function to display QT GUI and run a weather-monitoring application on the Server-side
+# Function to display QT GUI and run a weather-monitoring application on the Server-side, also to send data to AWS IoT through MQTT in json format
 #
 # Authors: Sowmya Ramakrishnan and Vinayak Srivatsan Kovalam Mohan
 #
@@ -27,6 +27,7 @@ import ssl
 import os
 import json
 
+#A class for Login
 class Login(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(Login, self).__init__(parent)
@@ -39,6 +40,7 @@ class Login(QtWidgets.QDialog):
         layout.addWidget(self.textPass)
         layout.addWidget(self.buttonLogin)
 
+    #Login function with parameter checking
     def handleLogin(self):
         if (self.textName.text() == 'pi' and
             self.textPass.text() == 'maya'):
@@ -47,6 +49,7 @@ class Login(QtWidgets.QDialog):
             QtWidgets.QMessageBox.warning(
                 self, 'Error', 'Wrong username or password. Try Again!')
 
+#Main class
 class Ui_DHT22SensorData(object):
 
     #Initialization variables
@@ -61,6 +64,7 @@ class Ui_DHT22SensorData(object):
         myAWSIoTMQTClient = None
         self.mqttSetup()
     
+    #Setting up MQTT for data transfer to AWS, Connecting and Subscribing to Topic/Thing
     def mqttSetup(self):
         self.myAWSIoTMQTTClient = AWSIoTMQTTClient("clientId")
         self.myAWSIoTMQTTClient.configureEndpoint("a31pa84ob6kseu-ats.iot.us-east-1.amazonaws.com", 8883)
@@ -260,7 +264,6 @@ class Ui_DHT22SensorData(object):
         self.HumidityPlotPushButton.setText(_translate("DHT22SensorData", "PLOT!"))
         self.label.setText(_translate("DHT22SensorData", "Sensor State : "))
         self.Datelabel.setText(_translate("DHT22SensorData", "Date and Time:"))
-     
         self.label_6.setText(_translate("DHT22SensorData", "Welcome!"))
         self.CelciusRadioButton.setText(_translate("DHT22SensorData", "Celcius"))
         self.FarenheitRadioButton.setText(_translate("DHT22SensorData", "Farenheit"))
@@ -273,7 +276,7 @@ class Ui_DHT22SensorData(object):
         self.Datelabel_9.setText(_translate("DHT22SensorData", "Average"))
         self.Datelabel_2.setText(_translate("DHT22SensorData", "Last value:"))
 
-    #Function to get current humidity and temperature data (in celcius), calculate max,min,avg and write them to a csv file
+    #Function to get current humidity and temperature data (in celcius), send them to AWS in json format via MQTT Publish, calculate max,min,avg, and write them to a csv file
     def getDataCelcius(self):
         global count
         humidity, temperature = Adafruit_DHT.read(22,4)
@@ -324,7 +327,7 @@ class Ui_DHT22SensorData(object):
                 file_write.writerow([0, 0, 0, 0, 0, 0, 0, 0, self.getTime()])
                 print("No Data Sensed")
 	
-    #Function to get current humidity and temperature data (in fahrenheit), calculate max,min,avg and write them to a csv file
+    #Function to get current humidity and temperature data (in fahrenheit),  send them to AWS in json format via MQTT Publish, calculate max,min,avg and write them to a csv file
     def getDataFahrenheit(self):
         global count
         humidity, temperature = Adafruit_DHT.read(22,4)
