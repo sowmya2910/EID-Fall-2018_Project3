@@ -54,15 +54,15 @@ Thus, all minimum requirements have been met.
 
 #### REFERENCES
 
-https://docs.aws.amazon.com/index.html
-https://www.w3schools.com/howto/howto_css_login_form.asp
-https://www.geeksforgeeks.org/working-csv-files-python/
-http://blog.glehmann.net/2014/12/23/Raspberry-Pi-as-a-temperature-logger/
-https://stackoverflow.com/questions/24123715/degree-fahrenheit-celsius-symbols-ascii-nsstring
-https://www.w3schools.com/js/default.asp
-https://github.com/adafruit/Adafruit_Python_DHT
-https://www.tutorialspoint.com/nodejs/
-https://us-east-2.console.aws.amazon.com/iotv2/home?region=us-east-2#/learnHub
-http://boto3.readthedocs.io/en/latest/guide/sqs.html
-https://github.com/aws/aws-iot-device-sdk-python
+- https://docs.aws.amazon.com/index.html
+- https://www.w3schools.com/howto/howto_css_login_form.asp
+- https://www.geeksforgeeks.org/working-csv-files-python/
+- http://blog.glehmann.net/2014/12/23/Raspberry-Pi-as-a-temperature-logger/
+- https://stackoverflow.com/questions/24123715/degree-fahrenheit-celsius-symbols-ascii-nsstring
+- https://www.w3schools.com/js/default.asp
+- https://github.com/adafruit/Adafruit_Python_DHT
+- https://www.tutorialspoint.com/nodejs/
+- https://us-east-2.console.aws.amazon.com/iotv2/home?region=us-east-2#/learnHub
+- http://boto3.readthedocs.io/en/latest/guide/sqs.html
+- https://github.com/aws/aws-iot-device-sdk-python
 
