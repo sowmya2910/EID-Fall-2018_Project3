@@ -44,7 +44,7 @@ class Ui_DHT22SensorData(object):
     def mqttSetup(self):
         self.myAWSIoTMQTTClient = AWSIoTMQTTClient("clientId")
         self.myAWSIoTMQTTClient.configureEndpoint("a31pa84ob6kseu-ats.iot.us-east-1.amazonaws.com", 8883)
-        self.myAWSIoTMQTTClient.configureCredentials("/home/pi/Project3Test/Certificates/CA-cert.pem","/home/pi/Project3Test/Certificates/a4ce7d3179-private.pem.key", "/home/pi/Project3Test/Certificates/a4ce7d3179-certificate.pem.crt")
+        self.myAWSIoTMQTTClient.configureCredentials("/home/pi/EID-Fall-2018_Project3/Certificates/CA-cert.pem","/home/pi/EID-Fall-2018_Project3/Certificates/a4ce7d3179-private.pem.key", "/home/pi/EID-Fall-2018_Project3/Certificates/a4ce7d3179-certificate.pem.crt")
         self.myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
         self.myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)  # Infinite offline Publish queueing
         self.myAWSIoTMQTTClient.configureDrainingFrequency(2)  # Draining: 2 Hz
