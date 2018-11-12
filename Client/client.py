@@ -15,6 +15,7 @@ import boto3
 import ast
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+global count
 
 class Ui_DHT22SensorData(object):
     def __init__(self):
@@ -122,9 +123,10 @@ class Ui_DHT22SensorData(object):
         now = currenttime.strftime("%m/%d/%Y %H:%M")
         self.Timelabel.setText(now)
         return now
-	
+    global count 
     def get_data(self):
-        global count 
+        #global count
+        count = 0
         self.SensorState.setText("Connected")
         queuelist = []
         for i in range(3):
@@ -158,29 +160,29 @@ class Ui_DHT22SensorData(object):
                                 "Min Hum: "+ str(min_h) + " %\n" + \
                                 "Last Hum: "+ str(curr_h) + " %\n" + \
                                 "Avg Hum: "+ str(avg_h) + " %\n\n"
-                            self.MessageBox.setText("Fetched Data:\n"  + final_mesg + "\nTimestamp: " + str(datetime.datetime.now()))
+                            self.MessageLabel.setText("Fetched Data:\n"  + final_mesg + "\nTimestamp: " + str(datetime.datetime.now()))
                             self.plotGraph()
                         else:
-                                self.MessageBox.setText("Error Fetching Data \n")
-                def plotGraph(self):
-                    plt.plot(range(self.count), self.maximumtemperature, 'b-', label='Maximum Temperature')
-                    plt.plot(range(self.count), self.minimumtemperature, 'r-', label='Minimum Temperature')
-                    plt.plot(range(self.count), self.currenttemperature, 'y-', label='Current Temperature')
-                    plt.plot(range(self.count), self.averagetemperature, 'g-', label='Average Temperature')
-                    plt.legend(loc='best')
-                    plt.title('Temperature Graph')
-                    plt.ylabel('Temperature in C')
-                    plt.xlabel('count')
-                    plt.show()
-                    plt.plot(range(self.count), self.maximumhumidity, 'b-', label='Maximum Humidity')
-                    plt.plot(range(self.count), self.minimumhumidity, 'r-', label='Minimum Humidity')
-                    plt.plot(range(self.count), self.currenthumidity, 'y-', label='Current Humidity')
-                    plt.plot(range(self.count), self.averagehumidity, 'g-', label='Average Humidity')
-                    plt.legend(loc='best')
-                    plt.title('Humidity Graph')
-                    plt.ylabel('Humidity in %')
-                    plt.xlabel('count')
-                    plt.show()		
+                                self.MessageLabel.setText("Error Fetching Data \n")
+    def plotGraph(self):
+        plt.plot(range(self.count), self.maximumtemperature, 'b-', label='Maximum Temperature')
+        plt.plot(range(self.count), self.minimumtemperature, 'r-', label='Minimum Temperature')
+        plt.plot(range(self.count), self.currenttemperature, 'y-', label='Current Temperature')
+        plt.plot(range(self.count), self.averagetemperature, 'g-', label='Average Temperature')
+        plt.legend(loc='best')
+        plt.title('Temperature Graph')
+        plt.ylabel('Temperature in C')
+        plt.xlabel('count')
+        plt.show()
+        plt.plot(range(self.count), self.maximumhumidity, 'b-', label='Maximum Humidity')
+        plt.plot(range(self.count), self.minimumhumidity, 'r-', label='Minimum Humidity')
+        plt.plot(range(self.count), self.currenthumidity, 'y-', label='Current Humidity')
+        plt.plot(range(self.count), self.averagehumidity, 'g-', label='Average Humidity')
+        plt.legend(loc='best')
+        plt.title('Humidity Graph')
+        plt.ylabel('Humidity in %')
+        plt.xlabel('count')
+        plt.show()		
 
 		
     def CtoF(self):
